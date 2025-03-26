@@ -1,11 +1,13 @@
 "use client";
 
-import TurnstileComponent from "@/app/_component/Turnstile";
+import onSubmit from "@/app/(beforeLogin)/_lib/signup";
+import { useActionState } from "react";
 
 export default function SignupModal() {
-  const handleVerify = (token: string) => {
-    console.log("Turnstile token :", token);
-  };
+  // const handleVerify = (token: string) => {
+  //   console.log("Turnstile token :", token);
+  // };
+  const [state, formAction] = useActionState(onSubmit, { message: null });
 
   return (
     <div className="w-screen h-full flex justify-center absolute bg-black/40 dark:bg-[#5b7083]/40 top-0 left-0 right-0 bottom-0">
@@ -18,13 +20,14 @@ export default function SignupModal() {
 
         <div className="px-20 pt-9 pb-5 text-[31px] font-bold">회원가입</div>
 
-        <form className="flex flex-col flex-1">
+        <form action={formAction} className="flex flex-col flex-1">
           <div className="flex-1 px-20">
             <div className="flex flex-col h-14 relative my-3">
               <label className="w-full inline-block absolute top-0 border border-[#cfd9de] rounded px-2 pt-2 h-14 text-sm text-[#536471] focus-within:text-red-500">
                 <input
                   type="email"
                   placeholder="이메일"
+                  name="email"
                   className="w-full border-none text-[17px] mt-4 px-2 pb-2 outline-none bg-transparent"
                 />
               </label>
@@ -35,6 +38,7 @@ export default function SignupModal() {
                 <input
                   type="text"
                   placeholder="닉네임"
+                  name="nickname"
                   className="w-full border-none text-[17px] mt-4 px-2 pb-2 outline-none bg-transparent"
                 />
               </label>
@@ -45,6 +49,7 @@ export default function SignupModal() {
                 <input
                   type="password"
                   placeholder="비밀번호"
+                  name="password"
                   className="w-full border-none text-[17px] mt-4 px-2 pb-2 outline-none bg-transparent"
                 />
               </label>
@@ -55,14 +60,15 @@ export default function SignupModal() {
                 <input
                   type="password"
                   placeholder="비밀번호 확인"
+                  name="passwordConfirm"
                   className="w-full border-none text-[17px] mt-4 px-2 pb-2 outline-none bg-transparent"
                 />
               </label>
             </div>
 
-            <div className="my-3">
+            {/* <div className="my-3">
               <TurnstileComponent onVerify={handleVerify} />
-            </div>
+            </div> */}
           </div>
 
           <div className="px-20 py-6">
@@ -73,6 +79,7 @@ export default function SignupModal() {
               회원가입
             </button>
           </div>
+          <div className="text-red-500">{state.message}</div>
         </form>
       </div>
     </div>
