@@ -8,11 +8,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
       name: "Credentials",
-      credentials: {
-        email: { label: "Email", type: "text" },
-        password: { label: "Password", type: "password" },
-      },
-
       authorize: async (credentials) => {
         const authResponse = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/login`,
@@ -22,41 +17,40 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              email: credentials.email,
+              username: credentials.username,
               password: credentials.password,
             }),
           }
         );
-
         if (!authResponse.ok) {
           return null;
         }
 
         const user = await authResponse.json();
-
         if (!user) {
           throw new Error("Invalid credentials.");
         }
 
         return {
           id: user.id,
-          email: user.email,
-          name: user.name,
-          accessToken: user.accessToken,
+          name: user.username,
+          ...user,
         };
       },
     }),
   ],
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.accessToken = user.accessToken;
-      }
-      return token;
-    },
 
+  // next-auth는 email, name, image만을 리턴해줄 수 있으니 아래와 같이 커스텀해서 데이터를 session에 넣어주면 된다.
+
+  callbacks: {
     async session({ session, token }) {
-      session.user.accessToken = token.accessToken as string;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (session as any).userData = {
+        id: "커스텀 id",
+        email: "커스텀 이메일",
+        name: "박요셉",
+        token: token,
+      };
       return session;
     },
   },

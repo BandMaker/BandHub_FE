@@ -1,29 +1,22 @@
 import { http, HttpResponse } from "msw";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-const User = [
-  {
-    id: 1,
-    email: "msw-user1@example.com",
-    password: "password1",
-    nickname: "msw-user1",
-  },
-  {
-    id: 2,
-    email: "msw-user2@example.com",
-    password: "password2",
-    nickname: "msw-user2",
-  },
-];
-
 export const handlers = [
   http.post(`${baseUrl}/api/login`, () => {
     console.log("로그인");
-    return HttpResponse.json(User[1], {
+    const responseBody = {
+      id: 1,
+      username: "asd",
+      password: "asd",
+      accessToken: "mock-access-token",
+    };
+    const responseOptions = {
+      status: 200,
       headers: {
         "Set-Cookie": "connect.sid=msw-cookie;HttpOnly;Path=/",
       },
-    });
+    };
+    return HttpResponse.json(responseBody, responseOptions);
   }),
   http.post(`${baseUrl}/api/logout`, () => {
     console.log("로그아웃");
