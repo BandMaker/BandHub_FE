@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { server } from "@/mocks/http";
+import AuthSession from "@/app/_component/AuthSession";
 
 if (process.env.NEXT_RUNTIME === "nodejs") {
   server.listen();
@@ -33,7 +34,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <MSWProvider>{children}</MSWProvider>
+        <MSWProvider>
+          <AuthSession>{children}</AuthSession>
+        </MSWProvider>
       </body>
     </html>
   );
