@@ -51,6 +51,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         name: "박요셉",
         token: token,
       };
+      console.log("token, session", token, session);
       return session;
     },
   },
